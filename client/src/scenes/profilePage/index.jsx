@@ -1,5 +1,5 @@
 import { Box, useMediaQuery } from "@mui/material"
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import NavBar from "../navbar";
@@ -15,9 +15,9 @@ const ProfilePage = () => {
     const token = useSelector((state) => state.token);
     const isNonMobileScreens = useMediaQuery("(min-width:1000px)")
 
-    const getUser = async () => {
-        const response = await fetch(`http://localhost:3001/users/${userId}`, {
-            method: "GET",
+    const viewUser = async () => {
+        const response = await fetch(`http://localhost:3001/users/${userId}/${_id}/profile`, {
+            method: "PATCH",
             headers: { Authorization: `Bearer ${token}`}
         })
         const data = await response.json();
@@ -25,7 +25,7 @@ const ProfilePage = () => {
     }
 
     useEffect(() => {
-        getUser();
+        viewUser();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     if (!user) return null;

@@ -9,7 +9,7 @@ export const getUser = async (req, res) => {
     } catch (err) {
         res.status(404).json({ message: err.message });
     }
-}
+};
 
 export const getUserFriends = async (req, res) => {
     try {
@@ -31,6 +31,24 @@ export const getUserFriends = async (req, res) => {
 };
 
 /* UPDATE */
+export const viewUser = async (req, res) => {
+    try {
+        const { id, viewerId } = req.params;
+        const user = await User.findById(id);
+        const profileViews = user.viewedProfile;
+
+        const updatedUser = (id === viewerId) ? user :
+            await User.findByIdAndUpdate(
+                id,
+                {viewedProfile: profileViews != undefined ? profileViews + 1 : 1}
+            );
+
+        res.status(200).json(updatedUser);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+};
+
 export const addRemoveFriend = async (req, res) => {
     try {
         const {id, friendId } = req.params;
@@ -60,4 +78,4 @@ export const addRemoveFriend = async (req, res) => {
     } catch (err) {
         res.status(404).json({ message: err.message });
     }
-}
+};
