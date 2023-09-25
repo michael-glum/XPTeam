@@ -51,7 +51,8 @@ export const viewUser = async (req, res) => {
 
 export const addRemoveFriend = async (req, res) => {
     try {
-        const {id, friendId } = req.params;
+        const {id, friendId} = req.params;
+        const {isProfile} = req.body;
         const user = await User.findById(id);
         const friend = await User.findById(friendId);
 
@@ -65,9 +66,9 @@ export const addRemoveFriend = async (req, res) => {
         await user.save();
         await friend.save();
 
-        const friends = await Promise.all(
-            user.friends.map((id) => User.findById(id))
-        );
+        const friends = !isProfile ? await Promise.all(user.friends.map((id) => User.findById(id)))
+            : await Promise.all(friend.friends.map((friendId) => User.findById(friendId)));
+
         const formattedFriends = friends.map(
             ({ _id, firstName, lastName, headline, location, picturePath }) => {
                 return { _id, firstName, lastName, headline, location, picturePath };

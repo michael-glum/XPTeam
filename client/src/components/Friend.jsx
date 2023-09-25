@@ -7,7 +7,7 @@ import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import { setFriends } from "../state";
 
-const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
+const Friend = ({ friendId, name, subtitle, userPicturePath, isProfile = false }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { _id } = useSelector((state) => state.user);
@@ -20,7 +20,8 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
     const main = palette.neutral.main;
     const medium = palette.neutral.medium;
 
-    const isFriend = friends.find((friend) => friend._id === friendId);
+    const isFriend = !isProfile ? friends.find((friend) => friend._id === friendId)
+        : friends.find((friend) => friend._id === _id);
 
     const patchFriend = async () => {
         const response = await fetch(
@@ -31,6 +32,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
+                body: JSON.stringify({ isProfile: isProfile })
             }
         );
         const data = await response.json();
@@ -65,7 +67,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
                     </Typography>
                 </Box>
             </FlexBetween>
-            {friendId != _id ? (
+            {friendId !== _id ? (
                 <IconButton
                     onClick={() => patchFriend()}
                     sx={{ backgroundColor: primaryLight, p: "0.6rem"}}
