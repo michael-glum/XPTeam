@@ -62,6 +62,7 @@ const PostWidget = ({
                 subtitle={location}
                 userPicturePath={userPicturePath}
                 isProfile={isProfile}
+                postId={postId}
             />
             <Typography color="main" sx={{ mt: "1rem" }}>
                 {description}

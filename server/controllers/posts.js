@@ -80,3 +80,21 @@ export const likePost = async (req, res) => {
         res.status(404).json({ message: err.message })
     }
 }
+
+/* DELETE */
+export const deletePost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const post = await Post.findById(postId);
+        const user = await User.findById(post.userId);
+        const likes = user.likes != undefined ? user.likes - post.likes.size : 0;
+        await User.findByIdAndUpdate(
+             post.userId,
+             { likes: likes}
+        );
+        await Post.findByIdAndDelete(postId);
+        res.status(201);
+    } catch (err) {
+        res.status(409).json({ message: err.message })
+    }
+}

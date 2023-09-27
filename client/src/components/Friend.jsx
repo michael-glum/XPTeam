@@ -6,8 +6,10 @@ import { useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import { setFriends } from "../state";
+import DropDownPost from "./DropDownPost";
+import { useState } from "react";
 
-const Friend = ({ friendId, name, subtitle, userPicturePath, isProfile = false }) => {
+const Friend = ({ friendId, name, subtitle, userPicturePath, isProfile = false, postId = undefined }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { _id } = useSelector((state) => state.user);
@@ -19,6 +21,8 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, isProfile = false }
     const primaryDark = palette.primary.dark;
     const main = palette.neutral.main;
     const medium = palette.neutral.medium;
+
+    const [openPostMenu, setOpenPostMenu] = useState(false);
 
     const isFriend = !isProfile ? friends.find((friend) => friend._id === friendId)
         : friends.find((friend) => friend._id === _id);
@@ -40,6 +44,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, isProfile = false }
     };
 
     return (
+        <>
         <FlexBetween>
             <FlexBetween gap="1rem">
                 <UserImage image={userPicturePath} size="55px" />
@@ -79,12 +84,17 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, isProfile = false }
                     )}
                 </IconButton>) : (
                 <IconButton
+                    onClick={() => setOpenPostMenu((prev) => !prev)}
                     sx={{ backgroundColor: primaryLight, p: "0.6rem"}}
                 >
                     <MoreVertIcon sx={{ color: primaryDark }} />
                 </IconButton>)
             }
         </FlexBetween>
+        {
+            openPostMenu && !isFriend && <DropDownPost postId={postId}/>
+        }
+        </>
     );
 };
 
