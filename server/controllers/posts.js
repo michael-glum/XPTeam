@@ -93,7 +93,8 @@ export const deletePost = async (req, res) => {
              { likes: likes}
         );
         await Post.findByIdAndDelete(postId);
-        res.status(201);
+        const posts = await Post.find().sort({ createdAt: -1 });
+        res.status(201).json(posts);
     } catch (err) {
         res.status(409).json({ message: err.message })
     }

@@ -2,10 +2,12 @@ import React from "react";
 import FlexBetween from "./FlexBetween";
 import { Box, Typography, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { setPosts } from "../state";
 
 const DropDownPost = ({ postId = undefined }) => {
+    const dispatch = useDispatch();
     const { palette } = useTheme();
-    const main = palette.neutral.main;
     const neutralLight = palette.neutral.light;
 
     const token = useSelector((state) => state.token);
@@ -21,8 +23,9 @@ const DropDownPost = ({ postId = undefined }) => {
                 },
             }
         );
-        // const data = await response.json();
-        // dispatch(setFriends({ friends: data }));
+
+        const posts = await response.json();
+        dispatch(setPosts({ posts }))
     };
 
     return (
@@ -39,7 +42,7 @@ const DropDownPost = ({ postId = undefined }) => {
             }}
         >
                 <Typography
-                    color={main}
+                    color="red"
                     variant="h7"
                     fontWeight="400"
                     onClick={() => deletePost()}
